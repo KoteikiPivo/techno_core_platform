@@ -8,6 +8,9 @@ init:
 run:
 	source $(VENV)/bin/activate; uvicorn app.main:app --reload --port 8011
 
+net:
+	source $(VENV)/bin/activate; uvicorn app.main:app --reload --root-path /techno --port 8011
+
 clean:
 	rm -rf $(VENV)
 	rm -rf ./app/__pycache__
@@ -15,4 +18,4 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf *.pyc
 
-.PHONY: init run clean
+.PHONY: init run net clean
