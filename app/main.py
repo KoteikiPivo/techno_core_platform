@@ -7,7 +7,8 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Dashboard API",
     description="Сервис для хранения и управления дашбордами",
-    version="1.0.0"
+    version="1.0.0",
+    openapi_url="/openapi.json"
 )
 
 app.include_router(router)
