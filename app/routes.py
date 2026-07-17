@@ -1,0 +1,104 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from typing import List
+
+from . import crud, schemas
+from .database import get_db
+
+router = APIRouter(prefix="/api/v1", tags=["dashboards"])
+
+
+@router.post("/dashboards",
+             response_model=schemas.DashboardResponse,
+             status_code=status.HTTP_201_CREATED)
+def create_dashboard(dashboard: schemas.DashboardCreate,
+                     db: Session = Depends(get_db)):
+    """Создать новый дашборд"""
+    existing = crud.get_dashboard(db, dashboard.dashboard_id)
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Дашборд с dashboard_id '{
+                dashboard.dashboard_id}' уже существует"
+        )
+    return crud.create_dashboard(db, dashboard)
+
+
+@router.get("/dashboards/{dashboard_id}",
+            response_model=schemas.DashboardResponse)
+def get_dashboard(dashboard_id: str, db: Session = Depends(get_db)):
+    """Получить дашборд"""
+    dashboard = crud.get_dashboard(db, dashboard_id)
+    if not dashboard:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Дашборд с dashboard_id '{dashboard_id}' не найден"
+        )
+    return dashboard
+
+
+@router.get("/dashboards",
+            response_model=List[schemas.DashboardResponse])
+def get_all_dashboards(skip: int = 0, limit: int = 100,
+                       db: Session = Depends(get_db)):
+    """Получить все дашборды"""
+    return crud.get_all_dashboards(db, skip=skip, limit=limit)
+
+
+@router.put("/dashboards/{dashboard_id}",
+            response_model=schemas.DashboardResponse)
+def update_dashboard(dashboard_id: str, dashboard: schemas.DashboardCreate,
+                     db: Session = Depends(get_db)):
+    """Обновить дашборд"""
+    if dashboard_id != dashboard.dashboard_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="dashboard_id в пути и в теле запроса не совпадают"
+        )
+
+    updated = crud.update_dashboard(db, dashboard_id, dashboard)
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Дашборд с dashboard_id '{dashboard_id}' не найден"
+        )
+    return updated
+
+
+@router.delete("/dashboards/{dashboard_id}",
+               status_code=status.HTTP_204_NO_CONTENT)
+def delete_dashboard(dashboard_id: str, db: Session = Depends(get_db)):
+    """Удалить дашборд"""
+    deleted = crud.delete_dashboard(db, dashboard_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Дашборд с dashboard_id '{dashboard_id}' не найден"
+        )
+    return None  # 204 No Content
+
+
+@router.get("/sources")
+def get_sources():
+    """Получить список источников"""
+    # placeholder
+    return [
+        {"id": "csv_provider", "name": "CSV файлы", "type": "file"},
+        {"id": "postgres", "name": "PostgreSQL", "type": "database"},
+        {"id": "clickhouse", "name": "ClickHouse", "type": "database"},
+        {"id": "api_provider", "name": "Внешний API", "type": "http"}
+    ]
+
+
+@router.get("/widgets")
+def get_widgets():
+    """Получить список виджетов"""
+    # placeholder
+    return [
+        {"id": "line_chart", "name": "Линейный график", "category": "chart"},
+        {"id": "bar_chart", "name": "Столбчатая диаграмма", "category": "chart"},
+        {"id": "pie_chart", "name": "Круговая диаграмма", "category": "chart"},
+        {"id": "table", "name": "Таблица", "category": "table"},
+        {"id": "map", "name": "Карта", "category": "map"},
+        {"id": "metric", "name": "Метрика (число)", "category": "metric"}
+    ]
