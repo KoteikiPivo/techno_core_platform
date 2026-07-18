@@ -38,3 +38,17 @@ class DashboardResponse(DashboardBase):  # GET
 
     class Config:
         from_attributes = True
+
+class UserBase(BaseModel):
+    username: str
+    role: str
+
+class UserCreate(UserBase):
+    pass
+
+class User(UserBase):
+    id: int
+    class Config:
+        from_attributes: True
+
+

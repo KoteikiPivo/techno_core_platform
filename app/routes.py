@@ -4,6 +4,7 @@ from typing import List
 
 from . import crud, schemas
 from .database import get_db
+from .auth import require_designer
 
 router = APIRouter(prefix="/api/v1", tags=["dashboards"])
 
@@ -12,7 +13,8 @@ router = APIRouter(prefix="/api/v1", tags=["dashboards"])
              response_model=schemas.DashboardResponse,
              status_code=status.HTTP_201_CREATED)
 def create_dashboard(dashboard: schemas.DashboardCreate,
-                     db: Session = Depends(get_db)):
+                     db: Session = Depends(get_db),
+                     role: str = Depends(require_designer)):
     """Создать новый дашборд"""
     existing = crud.get_dashboard(db, dashboard.dashboard_id)
     if existing:
@@ -48,7 +50,8 @@ def get_all_dashboards(skip: int = 0, limit: int = 100,
 @router.put("/dashboards/{dashboard_id}",
             response_model=schemas.DashboardResponse)
 def update_dashboard(dashboard_id: str, dashboard: schemas.DashboardCreate,
-                     db: Session = Depends(get_db)):
+                     db: Session = Depends(get_db),
+                     role: str = Depends(require_designer)):
     """Обновить дашборд"""
     if dashboard_id != dashboard.dashboard_id:
         raise HTTPException(
@@ -67,7 +70,7 @@ def update_dashboard(dashboard_id: str, dashboard: schemas.DashboardCreate,
 
 @router.delete("/dashboards/{dashboard_id}",
                status_code=status.HTTP_204_NO_CONTENT)
-def delete_dashboard(dashboard_id: str, db: Session = Depends(get_db)):
+def delete_dashboard(dashboard_id: str, db: Session = Depends(get_db), role: str = Depends(require_designer)):
     """Удалить дашборд"""
     deleted = crud.delete_dashboard(db, dashboard_id)
     if not deleted:
@@ -102,3 +105,7 @@ def get_widgets():
         {"id": "map", "name": "Карта", "category": "map"},
         {"id": "metric", "name": "Метрика (число)", "category": "metric"}
     ]
+
+@router.post("/login/")
+def login(username: str, role: str):
+    return {"message": f"Пользователь {username} вошел как {role}", "role": role}
