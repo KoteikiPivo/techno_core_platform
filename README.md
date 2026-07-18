@@ -9,15 +9,7 @@ curl -X POST http://127.0.0.1:8011/api/v1/dashboards \
     "dashboard_id": "sales-overview",
     "title": "Обзор продаж",
     "layout": {"type": "grid", "columns": 12},
-    "widgets": [
-      {
-        "widget_id": "w1",
-        "type": "line_chart",
-        "position": {"x": 0, "y": 0, "w": 6, "h": 4},
-        "data_source": {"provider": "csv_provider", "dataset_id": "sales_2026"},
-        "config": {"x_field": "date", "y_field": "revenue"}
-      }
-    ]
+    "widgets": []
   }'
   ```
 ### Получить все дашборды
