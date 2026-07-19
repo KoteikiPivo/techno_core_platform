@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import List
+from typing import List, Dict, Optional
 from datetime import datetime
 
 
@@ -29,10 +29,16 @@ class DashboardBase(BaseModel):
 
 
 class DashboardCreate(DashboardBase):  # POST
-    pass
+    dashboard_id: str
+    title: str
+    layout: Dict
+    widgets: List
+    author: Optional[str] = None 
 
 
-class DashboardResponse(DashboardBase):  # GET
+class DashboardResponse(DashboardCreate):  # GET
+    id: int
+    author: str
     created_at: datetime
     updated_at: datetime
 

@@ -8,8 +8,9 @@ def create_dashboard(db: Session, dashboard: schemas.DashboardCreate):
         dashboard_id=dashboard.dashboard_id,
         schema_version=dashboard.schema_version,
         title=dashboard.title,
-        layout=dashboard.layout.model_dump(),  # Pydantic model to dict
-        widgets=[w.model_dump() for w in dashboard.widgets]
+        layout=dashboard.layout,  # Pydantic model to dict
+        widgets=dashboard.widgets,
+        author=dashboard.author
     )
     db.add(db_dashboard)
     db.commit()

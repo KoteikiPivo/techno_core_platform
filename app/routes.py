@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Header
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -13,9 +13,11 @@ router = APIRouter(prefix="/api/v1", tags=["dashboards"])
              response_model=schemas.DashboardResponse,
              status_code=status.HTTP_201_CREATED)
 def create_dashboard(dashboard: schemas.DashboardCreate,
+                     user_id: str = Header(..., alias="User-id"),
                      db: Session = Depends(get_db),
                      role: str = Depends(require_designer)):
     """Создать новый дашборд"""
+    dashboard.author = user_id
     existing = crud.get_dashboard(db, dashboard.dashboard_id)
     if existing:
         raise HTTPException(
