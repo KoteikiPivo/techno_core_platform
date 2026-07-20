@@ -33,7 +33,7 @@ class DashboardCreate(DashboardBase):  # POST
     title: str
     layout: Dict
     widgets: List
-    author: Optional[str] = None 
+    author: Optional[str] = None
 
 
 class DashboardResponse(DashboardCreate):  # GET
@@ -45,16 +45,18 @@ class DashboardResponse(DashboardCreate):  # GET
     class Config:
         from_attributes = True
 
+
 class UserBase(BaseModel):
     username: str
     role: str
 
+
 class UserCreate(UserBase):
     pass
 
+
 class User(UserBase):
     id: int
+
     class Config:
         from_attributes: True
-
-

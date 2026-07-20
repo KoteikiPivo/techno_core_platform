@@ -108,6 +108,7 @@ def get_widgets():
         {"id": "metric", "name": "Метрика (число)", "category": "metric"}
     ]
 
+
 @router.post("/login/")
 def login(username: str, role: str):
     return {"message": f"Пользователь {username} вошел как {role}", "role": role}
