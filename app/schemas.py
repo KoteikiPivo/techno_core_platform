@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 
@@ -10,6 +10,12 @@ class Position(BaseModel):
     h: int
 
 
+class DataSource(BaseModel):
+    provider: str = Field(...,
+                          description="Провайдер данных (например, csv_provider)")
+    dataset_id: str = Field(..., description="ID набора данных")
+
+
 class Dataset(BaseModel):
     """Единый табличный формат данных"""
     dataset_id: str
@@ -19,11 +25,16 @@ class Dataset(BaseModel):
 
 class Widget(BaseModel):
     """Виджет с единым контрактом рендеринга"""
-    widget_id: str
-    type: str  # line_chart, bar_chart, pie_chart, kpi_card, table
-    position: Position
+    widget_id: str = Field(...,
+                           description="Провайдер данных (например, csv_provider)")
+    # line_chart, bar_chart, pie_chart, kpi_card, table
+    type: str = Field(..., description="Тип виджета (line_chart, bar_chart, pie_chart, kpi_card, table)")
+    position: Dict[str, int] = Field(..., description="Координаты x, y, w, h")
+    data_source: Optional[DataSource] = Field(
+        None, description="Источник данных виджет")
     # настройки виджета: x_field, y_field, title, aggregation, и т.д.
-    config: dict
+    config: Dict[str, Any] = Field(
+        default_factory=dict, description="Настройки виджета")
 
     @validator('type')
     def validate_widget_type(cls, v):
@@ -35,8 +46,8 @@ class Widget(BaseModel):
 
 
 class Layout(BaseModel):
-    type: str = "grid"
-    columns: int = 1
+    type: str = Field(default="grid", description="Тип сетки")
+    columns: int = Field(default=12, description="Количество колонок")
 
 
 class DashboardBase(BaseModel):
