@@ -8,7 +8,7 @@ def create_dashboard(db: Session, dashboard: schemas.DashboardCreate):
         dashboard_id=dashboard.dashboard_id,
         schema_version=dashboard.schema_version,
         title=dashboard.title,
-        layout=dashboard.layout,  # Pydantic model to dict
+        layout=dashboard.layout,
         widgets=dashboard.widgets,
         author=dashboard.author
     )
@@ -39,8 +39,10 @@ def update_dashboard(db: Session, dashboard_id: str,
 
     db_dashboard.schema_version = dashboard_update.schema_version
     db_dashboard.title = dashboard_update.title
-    db_dashboard.layout = dashboard_update.layout.model_dump()
-    db_dashboard.widgets = [w.model_dump() for w in dashboard_update.widgets]
+    db_dashboard.layout = dashboard_update.layout
+    db_dashboard.widgets = dashboard_update.widgets
+    if dashboard_update.author:
+        db_dashboard.author = dashboard_update.author
 
     db.commit()
     db.refresh(db_dashboard)
@@ -57,12 +59,14 @@ def delete_dashboard(db: Session, dashboard_id: str):
     db.commit()
     return True
 
+
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = database.User(username=user.username, role=user.role)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
+
 
 def get_user(db: Session, user_id: int):
     return db.query(database.User).filter(database.User.id == user_id).first()

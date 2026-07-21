@@ -1,16 +1,46 @@
-from pydantic import BaseModel, validator
-from typing import List, Dict, Optional
+from pydantic import BaseModel, validator, Field
+from typing import List, Dict, Optional, Any
 from datetime import datetime
 
 
+class Position(BaseModel):
+    x: int
+    y: int
+    w: int
+    h: int
+
+class DataSource(BaseModel):
+    provider: str = Field(..., description="Провайдер данных (например, csv_provider)")
+    dataset_id: str = Field(..., description="ID набора данных")
+
+class Dataset(BaseModel):
+    """Единый табличный формат данных"""
+    dataset_id: str
+    columns: List[Dict[str, str]]
+    rows: List[List[Any]]
+
+
 class Widget(BaseModel):
-    # placeholder
-    pass
+    """Виджет с единым контрактом рендеринга"""
+    widget_id: str =  Field(..., description="Провайдер данных (например, csv_provider)")
+    type: str = Field(..., description="Тип виджета (line_chart, bar_chart, pie_chart, kpi_card, table)") # line_chart, bar_chart, pie_chart, kpi_card, table
+    position: Dict[str, int] = Field(..., description="Координаты x, y, w, h")
+    data_source: Optional[DataSource] = Field(None, description="Источник данных виджет")
+    # настройки виджета: x_field, y_field, title, aggregation, и т.д.
+    config: Dict[str, Any] = Field(default_factory=dict, description="Настройки виджета")
+
+    @validator('type')
+    def validate_widget_type(cls, v):
+        allowed = ["line_chart", "bar_chart", "pie_chart", "kpi_card", "table"]
+        if v not in allowed:
+            raise ValueError(f'Тип виджета должен быть одним из: {
+                             ", ".join(allowed)}')
+        return v
 
 
 class Layout(BaseModel):
-    # placeholder
-    pass
+    type: str = Field(default="grid", description="Тип сетки")
+    columns: int = Field(default=12, description="Количество колонок")
 
 
 class DashboardBase(BaseModel):
@@ -19,6 +49,7 @@ class DashboardBase(BaseModel):
     title: str
     layout: Layout
     widgets: List[Widget]
+    datasets: Optional[List[Dataset]] = []  # данные для виджетов
 
     @validator('dashboard_id')
     def validate_dashboard_id(cls, v):
@@ -33,7 +64,7 @@ class DashboardCreate(DashboardBase):  # POST
     title: str
     layout: Dict
     widgets: List
-    author: Optional[str] = None 
+    author: Optional[str] = None
 
 
 class DashboardResponse(DashboardCreate):  # GET
@@ -45,16 +76,18 @@ class DashboardResponse(DashboardCreate):  # GET
     class Config:
         from_attributes = True
 
+
 class UserBase(BaseModel):
     username: str
     role: str
 
+
 class UserCreate(UserBase):
     pass
 
+
 class User(UserBase):
     id: int
+
     class Config:
         from_attributes: True
-
-

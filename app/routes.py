@@ -8,12 +8,18 @@ from .auth import require_designer
 
 router = APIRouter(prefix="/api/v1", tags=["dashboards"])
 
+responses_auth = {
+    400: {"description": "Неверный запрос (например, неверная роль)"},
+    403: {"description": "Доступ запрещен: только для Designer"},
+}
+responses_not_found = {404: {"description": "Дашборд не найден"}}
 
 @router.post("/dashboards",
              response_model=schemas.DashboardResponse,
-             status_code=status.HTTP_201_CREATED)
+             status_code=status.HTTP_201_CREATED,
+             responses={**responses_auth, 409: {"description": "Конфликт: дашборд с таким ID уже существует"}})
 def create_dashboard(dashboard: schemas.DashboardCreate,
-                     user_id: str = Header(..., alias="User-id"),
+                     user_id: str = Header(..., alias="User-id", description="ID пользователя (автора)"),
                      db: Session = Depends(get_db),
                      role: str = Depends(require_designer)):
     """Создать новый дашборд"""
@@ -29,7 +35,8 @@ def create_dashboard(dashboard: schemas.DashboardCreate,
 
 
 @router.get("/dashboards/{dashboard_id}",
-            response_model=schemas.DashboardResponse)
+            response_model=schemas.DashboardResponse,
+            responses=responses_not_found)
 def get_dashboard(dashboard_id: str, db: Session = Depends(get_db)):
     """Получить дашборд"""
     dashboard = crud.get_dashboard(db, dashboard_id)
@@ -50,7 +57,8 @@ def get_all_dashboards(skip: int = 0, limit: int = 100,
 
 
 @router.put("/dashboards/{dashboard_id}",
-            response_model=schemas.DashboardResponse)
+            response_model=schemas.DashboardResponse,
+            responses={**responses_auth, **responses_not_found})
 def update_dashboard(dashboard_id: str, dashboard: schemas.DashboardCreate,
                      db: Session = Depends(get_db),
                      role: str = Depends(require_designer)):
@@ -71,7 +79,8 @@ def update_dashboard(dashboard_id: str, dashboard: schemas.DashboardCreate,
 
 
 @router.delete("/dashboards/{dashboard_id}",
-               status_code=status.HTTP_204_NO_CONTENT)
+               status_code=status.HTTP_204_NO_CONTENT,
+               responses={**responses_auth, **responses_not_found})
 def delete_dashboard(dashboard_id: str, db: Session = Depends(get_db), role: str = Depends(require_designer)):
     """Удалить дашборд"""
     deleted = crud.delete_dashboard(db, dashboard_id)
@@ -107,6 +116,7 @@ def get_widgets():
         {"id": "map", "name": "Карта", "category": "map"},
         {"id": "metric", "name": "Метрика (число)", "category": "metric"}
     ]
+
 
 @router.post("/login/")
 def login(username: str, role: str):

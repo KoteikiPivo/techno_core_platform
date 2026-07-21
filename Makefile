@@ -11,6 +11,9 @@ run:
 net:
 	source $(VENV)/bin/activate; uvicorn app.main:app --reload --root-path /techno --port 8011
 
+test:
+	source $(VENV)/bin/activate; PYTHONPATH=. python -m pytest tests/test_api.py -v
+
 clean:
 	rm -rf $(VENV)
 	rm -rf ./app/__pycache__
