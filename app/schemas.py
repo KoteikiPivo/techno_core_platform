@@ -1,16 +1,42 @@
 from pydantic import BaseModel, validator
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from datetime import datetime
 
 
+class Position(BaseModel):
+    x: int
+    y: int
+    w: int
+    h: int
+
+
+class Dataset(BaseModel):
+    """Единый табличный формат данных"""
+    dataset_id: str
+    columns: List[Dict[str, str]]
+    rows: List[List[Any]]
+
+
 class Widget(BaseModel):
-    # placeholder
-    pass
+    """Виджет с единым контрактом рендеринга"""
+    widget_id: str
+    type: str  # line_chart, bar_chart, pie_chart, kpi_card, table
+    position: Position
+    # настройки виджета: x_field, y_field, title, aggregation, и т.д.
+    config: dict
+
+    @validator('type')
+    def validate_widget_type(cls, v):
+        allowed = ["line_chart", "bar_chart", "pie_chart", "kpi_card", "table"]
+        if v not in allowed:
+            raise ValueError(f'Тип виджета должен быть одним из: {
+                             ", ".join(allowed)}')
+        return v
 
 
 class Layout(BaseModel):
-    # placeholder
-    pass
+    type: str = "grid"
+    columns: int = 1
 
 
 class DashboardBase(BaseModel):
@@ -19,6 +45,7 @@ class DashboardBase(BaseModel):
     title: str
     layout: Layout
     widgets: List[Widget]
+    datasets: Optional[List[Dataset]] = []  # данные для виджетов
 
     @validator('dashboard_id')
     def validate_dashboard_id(cls, v):
