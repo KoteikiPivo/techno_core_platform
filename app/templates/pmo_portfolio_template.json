@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "dashboard_id": "pmo-portfolio-template",
+  "title": "Дашборд Проектного Офиса (PMO)",
+  "layout": {
+    "type": "grid",
+    "columns": 12
+  },
+  "widgets": [
+    {
+      "widget_id": "w1_active_projects",
+      "type": "kpi_card",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "value_field": "active_projects_count",
+        "label": "Активных проектов",
+        "format": "integer"
+      }
+    },
+    {
+      "widget_id": "w2_red_projects",
+      "type": "kpi_card",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "value_field": "red_zone_count",
+        "label": "Проекты в Красной Зоне",
+        "format": "integer"
+      }
+    },
+    {
+      "widget_id": "w3_schedule_delay",
+      "type": "kpi_card",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "value_field": "avg_delay_days",
+        "label": "Ср. задержка сроков (дней)",
+        "format": "number"
+      }
+    },
+    {
+      "widget_id": "w4_budget_spent",
+      "type": "kpi_card",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "value_field": "budget_spent_pct",
+        "label": "Освоение бюджета (%)",
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w5_budget_comparison",
+      "type": "bar_chart",
+      "position": { "x": 0, "y": 2, "w": 8, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "x_axis": "project_code",
+        "y_axis": ["plan_budget_mln", "fact_budget_mln"],
+        "title": "Сравнение планового и фактического бюджета по проектам (млн руб)"
+      }
+    },
+    {
+      "widget_id": "w6_health_distribution",
+      "type": "pie_chart",
+      "position": { "x": 8, "y": 2, "w": 4, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "category_field": "health_status",
+        "value_field": "projects_in_status",
+        "title": "Распределение проектов по Статусу Здоровья"
+      }
+    },
+    {
+      "widget_id": "w7_project_registry",
+      "type": "table",
+      "position": { "x": 0, "y": 6, "w": 12, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "pmo_portfolio_data" },
+      "config": {
+        "columns": ["project_code", "project_name", "pm_name", "progress_pct", "delay_days", "health_status"],
+        "title": "Реестр ключевых проектов портфеля"
+      }
+    }
+  ]
+}
