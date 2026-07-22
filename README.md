@@ -42,27 +42,7 @@ graph TD
 Модуль аутентификации является работой номер 6. В ходе разработки оказалось удобно встроить его в существующий код ядра платформы, поэтому он не является внешним модулем.
 
 # Проектирование данных
-Данные модуля хранятся в SQLite базе данных с данной схемой:
-```mermaid
-erDiagram
-    USER {
-        int id PK
-        string username UK
-        string role
-    }
-    DASHBOARD {
-        int id PK
-        string dashboard_id UK
-        string schema_version
-        string title
-        json layout
-        json widgets
-        string author
-        datetime created_at
-        datetime updated_at
-    }
-    USER ||--o{ DASHBOARD : "создает (author)"
-```
+**[Данные модуля хранятся в SQLite базе данных с данной схемой](docs/architecture.md)**<br/><br/>
 Формат данных в JSON:
 ```json
 {
