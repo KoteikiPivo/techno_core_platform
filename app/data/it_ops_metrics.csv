@@ -1,0 +1,6 @@
+date,uptime_pct,critical_tickets,mttr_minutes,sla_compliance_pct,created_tickets,resolved_tickets,category,count,ticket_id,service_name,priority,status,assignee,duration_hours
+2026-05-01,99.95,2,35,96.5,45,42,ПО,120,INC-1021,1C:ERP,High,In Progress,Иванов А.,2.5
+2026-05-02,99.98,1,28,98.1,38,40,Сеть,45,INC-1025,VPN Server,Critical,Investigating,Петров С.,1.2
+2026-05-03,99.91,3,42,94.2,52,48,Оборудование,30,INC-1028,DB Cluster,Critical,In Progress,Сидоров М.,4.1
+2026-05-04,99.99,0,22,99.0,30,32,Доступы,65,INC-1031,Mail Service,High,Pending,Кузнецов Е.,0.8
+2026-05-05,99.96,1,30,97.5,41,39,Базы Данных,25,INC-1035,Active Directory,Medium,In Progress,Иванов А.,1.5

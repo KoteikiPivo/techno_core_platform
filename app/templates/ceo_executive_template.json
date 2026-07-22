@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "dashboard_id": "ceo-executive-template",
+  "title": "Стратегический дашборд Генерального директора",
+  "layout": {
+    "type": "grid",
+    "columns": 12
+  },
+  "widgets": [
+    {
+      "widget_id": "w1_revenue",
+      "type": "kpi_card",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "value_field": "total_revenue_mln",
+        "label": "Выручка (млн руб)",
+        "format": "currency"
+      }
+    },
+    {
+      "widget_id": "w2_net_profit",
+      "type": "kpi_card",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "value_field": "net_profit_mln",
+        "label": "Чистая прибыль (млн руб)",
+        "format": "currency"
+      }
+    },
+    {
+      "widget_id": "w3_plan_execution",
+      "type": "kpi_card",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "value_field": "plan_completion_pct",
+        "label": "Выполнение плана (%)",
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w4_receivables",
+      "type": "kpi_card",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "value_field": "receivables_mln",
+        "label": "Дебиторская задолженность (млн руб)",
+        "format": "currency"
+      }
+    },
+    {
+      "widget_id": "w5_fin_dynamics",
+      "type": "line_chart",
+      "position": { "x": 0, "y": 2, "w": 8, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "x_axis": "month",
+        "y_axis": ["plan_revenue", "fact_revenue", "expenses"],
+        "title": "Финансовая динамика: План vs Факт и Расходы"
+      }
+    },
+    {
+      "widget_id": "w6_business_units",
+      "type": "bar_chart",
+      "position": { "x": 8, "y": 2, "w": 4, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "x_axis": "unit_name",
+        "y_axis": "revenue",
+        "title": "Выручка по бизнес-направлениям"
+      }
+    },
+    {
+      "widget_id": "w7_branch_summary",
+      "type": "table",
+      "position": { "x": 0, "y": 6, "w": 12, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "ceo_executive_summary" },
+      "config": {
+        "columns": ["branch_name", "head_person", "revenue_fact", "plan_pct", "margin_pct", "status"],
+        "title": "Сводный отчет по филиалам и региональным представительствам"
+      }
+    }
+  ]
+}

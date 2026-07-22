@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "dashboard_id": "it-ops-template",
+  "title": "Дашборд IT-подразделения и Поддержки",
+  "layout": {
+    "type": "grid",
+    "columns": 12
+  },
+  "widgets": [
+    {
+      "widget_id": "w1_uptime",
+      "type": "kpi_card",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "value_field": "uptime_pct",
+        "label": "Uptime сервисов (%)",
+        "target": 99.9,
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w2_critical_incidents",
+      "type": "kpi_card",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "value_field": "critical_tickets",
+        "label": "Открытые критические инциденты",
+        "format": "integer"
+      }
+    },
+    {
+      "widget_id": "w3_mttr",
+      "type": "kpi_card",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "value_field": "mttr_minutes",
+        "label": "Среднее время решения (MTTR, мин)",
+        "format": "number"
+      }
+    },
+    {
+      "widget_id": "w4_sla_rate",
+      "type": "kpi_card",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "value_field": "sla_compliance_pct",
+        "label": "Соблюдение SLA (%)",
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w5_tickets_trend",
+      "type": "line_chart",
+      "position": { "x": 0, "y": 2, "w": 8, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "x_axis": "date",
+        "y_axis": ["created_tickets", "resolved_tickets"],
+        "title": "Динамика поступления и закрытия инцидентов"
+      }
+    },
+    {
+      "widget_id": "w6_tickets_category",
+      "type": "pie_chart",
+      "position": { "x": 8, "y": 2, "w": 4, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "category_field": "category",
+        "value_field": "count",
+        "title": "Распределение тикетов по категориям"
+      }
+    },
+    {
+      "widget_id": "w7_critical_table",
+      "type": "table",
+      "position": { "x": 0, "y": 6, "w": 12, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "it_ops_metrics" },
+      "config": {
+        "columns": ["ticket_id", "service_name", "priority", "status", "assignee", "duration_hours"],
+        "title": "Реестр критических инцидентов в работе"
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "dashboard_id": "sales-department-template",
+  "title": "Оперативный дашборд Отдела Продаж",
+  "layout": {
+    "type": "grid",
+    "columns": 12
+  },
+  "widgets": [
+    {
+      "widget_id": "w1_total_sales",
+      "type": "kpi_card",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "value_field": "total_revenue_rub",
+        "label": "Выручка за месяц (руб)",
+        "format": "currency"
+      }
+    },
+    {
+      "widget_id": "w2_sales_plan",
+      "type": "kpi_card",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "value_field": "plan_completion_pct",
+        "label": "Выполнение плана (%)",
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w3_avg_deal",
+      "type": "kpi_card",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "value_field": "avg_deal_size_rub",
+        "label": "Средний чек (руб)",
+        "format": "currency"
+      }
+    },
+    {
+      "widget_id": "w4_conversion_rate",
+      "type": "kpi_card",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 2 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "value_field": "funnel_conversion_pct",
+        "label": "Конверсия воронки (%)",
+        "format": "percentage"
+      }
+    },
+    {
+      "widget_id": "w5_daily_sales_trend",
+      "type": "line_chart",
+      "position": { "x": 0, "y": 2, "w": 8, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "x_axis": "day_date",
+        "y_axis": ["daily_revenue", "cumulative_revenue"],
+        "title": "Ежедневная и накопительная динамика продаж"
+      }
+    },
+    {
+      "widget_id": "w6_manager_performance",
+      "type": "bar_chart",
+      "position": { "x": 8, "y": 2, "w": 4, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "x_axis": "manager_name",
+        "y_axis": "manager_revenue",
+        "title": "Выручка по менеджерам продаж"
+      }
+    },
+    {
+      "widget_id": "w7_top_deals_table",
+      "type": "table",
+      "position": { "x": 0, "y": 6, "w": 12, "h": 4 },
+      "data_source": { "provider": "csv_provider", "dataset_id": "sales_department_data" },
+      "config": {
+        "columns": ["deal_id", "client_name", "deal_amount", "stage", "manager_name", "close_date"],
+        "title": "Реестр наиболее крупных сделок текущего месяца"
+      }
+    }
+  ]
+}
