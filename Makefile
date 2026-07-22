@@ -20,5 +20,7 @@ clean:
 	rm -f ./dashboards.db
 	rm -rf .pytest_cache
 	rm -rf *.pyc
+	rm -rf ./tests/__pycache__
+	rm -rf ./tests/.pytest_cache
 
 .PHONY: init run net clean
