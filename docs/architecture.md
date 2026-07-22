@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     DASHBOARD {
         int id PK
@@ -16,3 +17,4 @@ erDiagram
         string role
     }
     USER ||--o{ DASHBOARD : "создает (author)"
+```
