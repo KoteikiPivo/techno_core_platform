@@ -1,4 +1,4 @@
-Документация API: [koteikipivo.ru/techno/docs](https://koteikipivo.ru/techno/docs)<br/>
+Документация API через Swagger UI: [koteikipivo.ru/techno/docs](https://koteikipivo.ru/techno/docs)<br/>
 Также, для тестирования без установки последняя версия API развернута по ссылке https://koteikipivo.ru/techno
 
 # Постановка задачи
